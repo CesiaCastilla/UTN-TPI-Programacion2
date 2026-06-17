@@ -1,0 +1,20 @@
+# Archivos del sistema operativo (macOS)
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Carpetas de compilación automática de NetBeans
+build/
+nbproject/private/
+dist/
+
+# Archivos de bitácora y bloqueos de NetBeans
+nbproject/nag-results.xml
+*.log
+
+# Archivos de otros entornos (por si tus compañeros usan IntelliJ o Eclipse)
+.idea/
+*.iml
+.classpath
+.project
+.settings/
