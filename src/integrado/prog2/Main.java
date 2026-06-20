@@ -1,10 +1,15 @@
 package integrado.prog2;
 
+
 import integrado.prog2.menu.MenuProducto;
 import integrado.prog2.menu.MenuUsuario;
+import integrado.prog2.menu.MenuPedido;
 import integrado.prog2.repository.CategoriaRepository;
+import integrado.prog2.repository.PedidoRepository;
 import integrado.prog2.repository.ProductoRepository;
 import integrado.prog2.repository.UsuarioRepository;
+import integrado.prog2.service.ProductoService;
+import integrado.prog2.service.UsuarioService;
 import java.util.Scanner;
 
 /**
@@ -19,9 +24,14 @@ public class Main {
         CategoriaRepository categoriaRepository = new CategoriaRepository();
         ProductoRepository productoRepository = new ProductoRepository();
         UsuarioRepository usuarioRepository = new UsuarioRepository();
+        PedidoRepository pedidoRepository = new PedidoRepository();
+        
+        UsuarioService usuarioService = new UsuarioService(usuarioRepository);
+        ProductoService productoService = new ProductoService(productoRepository, categoriaRepository);
 
         MenuProducto menuProducto = new MenuProducto(scanner, categoriaRepository, productoRepository);
         MenuUsuario menuUsuario = new MenuUsuario(scanner, usuarioRepository);
+        MenuPedido menuPedido = new MenuPedido(scanner, pedidoRepository, usuarioService, productoService);
 
         System.out.println("=== BIENVENIDO A FOOD STORE ===");
 
@@ -40,7 +50,7 @@ public class Main {
                 case "1" -> System.out.println("El módulo de Categorías será integrado próximamente.");
                 case "2" -> menuProducto.mostrar();
                 case "3" -> menuUsuario.mostrar();
-                case "4" -> System.out.println("El módulo de Pedidos será integrado próximamente.");
+                case "4" -> menuPedido.mostrar();
                 case "0" -> salir = true;
                 default -> System.out.println("Opción inválida. Intente nuevamente.");
             }
