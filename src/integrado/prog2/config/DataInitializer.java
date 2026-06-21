@@ -30,11 +30,15 @@ public class DataInitializer {
         
         // 2. Precargar Usuarios de prueba
         if (userRepo.listarTodos().isEmpty()) {
-            Usuario admin = new Usuario("Alfredo", "Castillo", "admin@foodstore.com", "11223344", "1234", Rol.ADMIN);
+            Usuario admin = new Usuario("Administrador", "Store", "admin@foodstore.com", "11223344", "1234", Rol.ADMIN);
             Usuario cliente = new Usuario("Alex", "Belisario", "usuario@foodstore.com", "11556677", "1234", Rol.USUARIO);
+            Usuario cliente2 = new Usuario("Cesia", "Castilla", "compañera1@foodstore.com", "11222222", "1234", Rol.USUARIO);
+            Usuario cliente3 = new Usuario("Rocio", "Aguero", "compañera2@foodstore.com", "11333333", "1234", Rol.USUARIO);
             
             userRepo.guardar(admin);
             userRepo.guardar(cliente);
+            userRepo.guardar(cliente2);
+            userRepo.guardar(cliente3);
         }
     }
 }
