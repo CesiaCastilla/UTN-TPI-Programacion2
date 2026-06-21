@@ -2,6 +2,7 @@ package integrado.prog2.menu;
 
 
 import integrado.prog2.entities.Pedido;
+import integrado.prog2.entities.Producto;
 import integrado.prog2.enums.EstadoPedido;
 import integrado.prog2.enums.FormaPago;
 import integrado.prog2.exception.EntidadNoEncontradaException;
@@ -82,6 +83,8 @@ public class MenuPedido {
     private void crear(){
         try{
             Long usuarioId = leerLong("ID del usuario que realiza la compra: ");
+            pedidoService.validarUsuarioExistente(usuarioId);
+
             System.out.println("Debe seleccionar una forma de pago:");
             FormaPago[] formas = FormaPago.values();
             for (int i = 0; i < formas.length; i++) {
@@ -95,7 +98,12 @@ public class MenuPedido {
                 }
             }
             FormaPago formaPago = formas[opcForma - 1];
-            
+
+            System.out.print("¿Desea ver el catálogo de productos disponibles? (S/N): ");
+            if (scanner.nextLine().trim().equalsIgnoreCase("S")) {
+                mostrarCatalogoProductos();
+            }
+
             List<Long> productosIds = new ArrayList<>();
             List<Integer> cantidades = new ArrayList<>();
             
@@ -118,6 +126,18 @@ public class MenuPedido {
             System.out.println("Error al crear el pedido: " + e.getMessage());}
     }
         
+    private void mostrarCatalogoProductos(){
+        List<Producto> productos = pedidoService.listarProductosDisponibles();
+        if (productos.isEmpty()) {
+            System.out.println("No hay productos cargados");
+        } else {
+            System.out.println("\n--- CATÁLOGO DE PRODUCTOS ---");
+            for (Producto p : productos) {
+                System.out.println(" -> " + p);
+            }
+        }
+    }
+
     private void editar(){
         Long id = leerLong("Ingrese el ID del pedido a editar: ");
         try {

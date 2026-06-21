@@ -59,11 +59,11 @@ public class Pedido extends Base implements Calculable  {
         this.estado = estado;
     }
 
-    public double getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(double total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 

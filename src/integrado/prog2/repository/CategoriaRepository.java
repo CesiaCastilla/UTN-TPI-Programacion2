@@ -31,6 +31,7 @@ public class CategoriaRepository implements IRepository<Categoria> {
             Categoria existente = buscarPorId(categoria.getId());
             if (existente != null) {
                 existente.setNombre(categoria.getNombre());
+                existente.setDescripcion(categoria.getDescripcion());
             }
         }
     }

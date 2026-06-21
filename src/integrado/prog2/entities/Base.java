@@ -46,4 +46,8 @@ public abstract class Base {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    // Abstracto: obliga a cada entidad a definir su propia representación legible en consola.
+    @Override
+    public abstract String toString();
 }

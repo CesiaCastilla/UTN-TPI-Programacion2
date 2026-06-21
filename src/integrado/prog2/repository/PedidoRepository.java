@@ -15,7 +15,7 @@ import java.util.List;
 public class PedidoRepository implements IRepository<Pedido>{
     
     // Nuestra "Base de Datos" en memoria
-    private static final List<Pedido> tablaPedidos = new ArrayList();
+    private static final List<Pedido> tablaPedidos = new ArrayList<>();
     private static Long ultimoId = 0L;
     
     @Override

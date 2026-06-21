@@ -5,6 +5,7 @@ import integrado.prog2.entities.Categoria;
 import integrado.prog2.entities.Producto;
 import integrado.prog2.exception.EntidadNoEncontradaException;
 import integrado.prog2.exception.StockInvalidoException;
+import integrado.prog2.exception.ValidationException;
 import integrado.prog2.repository.CategoriaRepository;
 import integrado.prog2.repository.ProductoRepository;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ProductoService {
     }
 
     public Producto crear(String nombre, Double precio, String descripcion, int stock, String imagen, Boolean disponible, Long categoriaId) {
+        validarNombre(nombre);
         validarPrecioYStock(precio, stock);
         Categoria categoria = obtenerCategoriaValida(categoriaId);
 
@@ -38,6 +40,7 @@ public class ProductoService {
 
     public Producto editar(Long id, String nombre, Double precio, String descripcion, int stock, String imagen, Boolean disponible, Long categoriaId) {
         Producto existente = obtenerPorId(id);
+        validarNombre(nombre);
         validarPrecioYStock(precio, stock);
         Categoria categoria = obtenerCategoriaValida(categoriaId);
 
@@ -85,6 +88,12 @@ public class ProductoService {
             throw new EntidadNoEncontradaException("No existe una categoría activa con ID " + categoriaId);
         }
         return categoria;
+    }
+
+    private void validarNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new ValidationException("El nombre del producto no puede estar vacío");
+        }
     }
 
     private void validarPrecioYStock(Double precio, int stock) {

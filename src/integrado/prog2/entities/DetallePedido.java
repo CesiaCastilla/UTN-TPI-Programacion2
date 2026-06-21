@@ -53,7 +53,7 @@ public class DetallePedido extends Base {
 
     @Override
     public String toString() {
-        return "DetallePedido{" + "cantidad=" + cantidad + ", subTotal= $" + subTotal + ", producto=" + producto.getNombre() + '}';
+        return "DetallePedido{" + "cantidad=" + cantidad + ", subTotal= $" + subTotal + ", producto=" + (producto != null ? producto.getNombre() : "N/A") + '}';
     }
  
     

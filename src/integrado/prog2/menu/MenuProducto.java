@@ -4,6 +4,7 @@ package integrado.prog2.menu;
 import integrado.prog2.entities.Producto;
 import integrado.prog2.exception.EntidadNoEncontradaException;
 import integrado.prog2.exception.StockInvalidoException;
+import integrado.prog2.exception.ValidationException;
 import integrado.prog2.repository.CategoriaRepository;
 import integrado.prog2.repository.ProductoRepository;
 import integrado.prog2.service.ProductoService;
@@ -86,7 +87,7 @@ public class MenuProducto {
 
             Producto producto = productoService.crear(nombre, precio, descripcion, stock, imagen, disponible, categoriaId);
             System.out.println("Producto creado con éxito. ID generado: " + producto.getId());
-        } catch (StockInvalidoException | EntidadNoEncontradaException e) {
+        } catch (StockInvalidoException | EntidadNoEncontradaException | ValidationException e) {
             System.out.println("Error al crear el producto: " + e.getMessage());
         }
     }
@@ -122,13 +123,14 @@ public class MenuProducto {
             String dispInput = scanner.nextLine().trim();
             boolean disponible = dispInput.isEmpty() ? Boolean.TRUE.equals(actual.getDisponible()) : dispInput.equalsIgnoreCase("S");
 
-            System.out.print("ID de categoría [" + actual.getCategoria().getId() + "]: ");
+            Long categoriaActualId = actual.getCategoria() != null ? actual.getCategoria().getId() : null;
+            System.out.print("ID de categoría [" + categoriaActualId + "]: ");
             String catInput = scanner.nextLine().trim();
-            Long categoriaId = catInput.isEmpty() ? actual.getCategoria().getId() : Long.parseLong(catInput);
+            Long categoriaId = catInput.isEmpty() ? categoriaActualId : Long.parseLong(catInput);
 
             productoService.editar(id, nombre, precio, descripcion, stock, imagen, disponible, categoriaId);
             System.out.println("Producto actualizado con éxito.");
-        } catch (EntidadNoEncontradaException | StockInvalidoException e) {
+        } catch (EntidadNoEncontradaException | StockInvalidoException | ValidationException e) {
             System.out.println("Error al editar el producto: " + e.getMessage());
         } catch (NumberFormatException e) {
             System.out.println("Error: ingrese un valor numérico válido.");

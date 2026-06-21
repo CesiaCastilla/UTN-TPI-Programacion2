@@ -12,7 +12,9 @@ import integrado.prog2.exception.ValidationException;
 import integrado.prog2.repository.PedidoRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -31,6 +33,14 @@ public class PedidoService {
         this.productoService = productoService;
     }
     
+    public List<Producto> listarProductosDisponibles(){
+        return productoService.listar();
+    }
+
+    public void validarUsuarioExistente(Long usuarioId){
+        usuarioService.obtenerPorId(usuarioId);
+    }
+
     public List<Pedido> listarPedidos(Long usuarioId){
         List<Pedido> activo = pedidoRepository.listarTodos();
         List<Pedido> filtrados = new ArrayList<>();
@@ -44,26 +54,28 @@ public class PedidoService {
     
     public Pedido crearPedido(Long usuarioId, FormaPago formaPago, List<Long> productosIds, List<Integer> cantidades){
         Usuario usuario = usuarioService.obtenerPorId(usuarioId);
-        if(usuario == null || usuario.isEliminado()){
-            throw new ValidationException("El usuario no existe");
-        }
-        
+
         if (productosIds == null || productosIds.isEmpty()) {
             throw new ValidationException("Debe agregar al menos un producto al pedido.");
         }
         
+       // Se acumula la cantidad total pedida por producto antes de validar el stock,
+       // porque el mismo producto puede repetirse en varias líneas del pedido.
+       Map<Long, Integer> cantidadTotalPorProducto = new HashMap<>();
        for(int i=0; i<productosIds.size(); i++){
             Long prodId = productosIds.get(i);
             int cantidad = cantidades.get(i);
-                
-            Producto producto = productoService.obtenerPorId(prodId);
-            if(producto == null || producto.isEliminado()){
-                throw new EntidadNoEncontradaException("El producto no existe");
+            if(cantidad <= 0){
+                throw new ValidationException("La cantidad debe ser mayor a cero");
             }
-            if(producto.getStock() < cantidad){
-                throw new ValidationException("No hay stock suficiente");
+            cantidadTotalPorProducto.merge(prodId, cantidad, Integer::sum);
+       }
+
+       for(Map.Entry<Long, Integer> entry : cantidadTotalPorProducto.entrySet()){
+            Producto producto = productoService.obtenerPorId(entry.getKey());
+            if(producto.getStock() < entry.getValue()){
+                throw new ValidationException("No hay stock suficiente para el producto '" + producto.getNombre() + "'");
             }
-                 
        }
        
             
@@ -92,8 +104,8 @@ public class PedidoService {
            
             pedidoRepository.guardar(nvPedido);
             return nvPedido;
-            
-        }catch(Exception e){
+
+        }catch(ValidationException | EntidadNoEncontradaException e){
             for(int i=0; i <productosModificados.size();i++){
                 Producto prod = productosModificados.get(i);
                 int cant = cantidadesRestadas.get(i);
