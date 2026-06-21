@@ -133,8 +133,4 @@ public class Pedido extends Base implements Calculable  {
             calcularTotal();
         }
     }
-    
-    
-    
-    
 }

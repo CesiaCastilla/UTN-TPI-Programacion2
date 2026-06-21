@@ -11,19 +11,22 @@ package integrado.prog2.entities;
 public class Categoria extends Base {
     
     private String nombre;
+    private String descripcion;
 
     // Constructor vacío obligatorio
     public Categoria() {
         super();
     }
 
-    // Constructor parametrizado para facilitar la creación
-    public Categoria(String nombre) {
+    // Constructor parametrizado actualizado para recibir ambos datos
+    public Categoria(String nombre, String descripcion) {
         super();
         this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 
-    // Getter y Setter
+    // --- GETTERS Y SETTERS ---
+
     public String getNombre() {
         return nombre;
     }
@@ -32,10 +35,19 @@ public class Categoria extends Base {
         this.nombre = nombre;
     }
 
-    // Sobrecarga de toString para poder listarla lindo por consola más adelante
+    // <--- METODOS NUEVOS AGREGADOS --->
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    // Sobrecarga de toString optimizada para mostrar la descripción
     @Override
     public String toString() {
-        return String.format("Categoría [ID: %d | Nombre: %s | Creada: %s | Eliminada: %s]", 
-                getId(), nombre, getCreatedAt(), isEliminado() ? "Sí" : "No");
+        return String.format("Categoría [ID: %d | Nombre: %s | Descripción: %s | Creada: %s | Eliminada: %s]", 
+                getId(), nombre, descripcion, getCreatedAt(), isEliminado() ? "Sí" : "No");
     }
 }
