@@ -147,8 +147,5 @@ public class PedidoService {
         }
         
         pedidoRepository.eliminar(pedidoId);
-        
-       
     }
-    
 }

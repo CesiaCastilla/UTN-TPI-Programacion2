@@ -58,15 +58,15 @@ public class CategoriaRepository implements IRepository<Categoria> {
     }
     
     @Override
-public void eliminar(Long id) {
-    Categoria categoria = buscarPorId(id);
+    public void eliminar(Long id) {
+        Categoria categoria = buscarPorId(id);
     
-    // SI NO EXISTE, LANZAMOS NUESTRA EXCEPCIÓN PERSONALIZADA:
-    if (categoria == null) {
-        throw new EntidadNoEncontradaException("Error al eliminar: No existe la categoría con ID " + id);
+        // SI NO EXISTE, LANZAMOS NUESTRA EXCEPCIÓN PERSONALIZADA:
+        if (categoria == null) {
+            throw new EntidadNoEncontradaException("Error al eliminar: No existe la categoría con ID " + id);
+        }
+    
+        // Si existe, aplicamos la baja lógica
+        categoria.setEliminado(true);
     }
-    
-    // Si existe, aplicamos la baja lógica
-    categoria.setEliminado(true);
-}
 }
