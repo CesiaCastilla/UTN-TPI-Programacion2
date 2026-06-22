@@ -59,7 +59,3 @@ Creacion del procedimiento almacenado logico con control trnsaccional estricto
 9. 09_concurrencia_guiada.sql (Simulacion guiada de concurrencia)
 Guia interactiva paso a paso orientada al testing del comportamiento concurrente
 bajo distintos niveles de aislamiento.
-
-
-
-
