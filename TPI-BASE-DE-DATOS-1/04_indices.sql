@@ -49,10 +49,17 @@ CALL crear_indice_si_no_existe('detalles_pedidos', 'idx_detalles_producto_id', '
 -- =============================================================================
 -- Índices sobre campos de filtrado frecuente
 -- =============================================================================
--- Filtrado de pedidos por estado (ej. listar pendientes/confirmados)
-CALL crear_indice_si_no_existe('pedidos', 'idx_pedidos_estado', 'estado');
+-- 'estado' tiene baja cardinalidad (solo 4 valores posibles repartidos en miles
+-- de filas), por lo que un índice simple sobre esa columna sola "no aporta"
+-- (Unidad 6 - Gestión de SGBD: un índice sobre una columna con pocos valores
+-- únicos no filtra lo suficiente como para justificar su costo de mantenimiento).
+-- En cambio, sí es útil como índice COMPUESTO junto con 'created_at', para el
+-- patrón real "listar pedidos en estado X ordenados/filtrados por fecha"
+-- (ej. pedidos PENDIENTES más recientes primero), donde la columna de baja
+-- cardinalidad filtra un poco y created_at aporta el orden/rango.
+CALL crear_indice_si_no_existe('pedidos', 'idx_pedidos_estado_created_at', 'estado, created_at');
 
--- Filtrado por fecha de creación (reportes por período)
+-- Filtrado por fecha de creación sin filtro de estado (reportes por período)
 CALL crear_indice_si_no_existe('pedidos', 'idx_pedidos_created_at', 'created_at');
 
 -- Índice compuesto para el patrón "productos activos por categoría" (HU-PROD-01)

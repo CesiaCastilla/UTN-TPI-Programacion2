@@ -22,9 +22,16 @@ SHOW GRANTS FOR 'operador_foodstore'@'localhost';
 -- =====================================================================
 -- 2. VISTAS PARA OCULTAR INFORMACIÓN SENSIBLE
 -- =====================================================================
--- Vista 1: Usuarios públicos (Oculta campos críticos si los hubiera, muestra estructura básica)
+-- Vista 1: Usuarios públicos. El email es información sensible (PII), por lo
+-- que se enmascara en vez de exponerlo completo: solo se ve la primera letra
+-- y el dominio (ej. 'juan.perez@gmail.com' -> 'j***@gmail.com'), suficiente
+-- para validar formato/dominio sin revelar la dirección real del usuario.
 CREATE OR REPLACE VIEW vw_usuarios_publico AS
-SELECT id, nombre, email, rol
+SELECT
+    id,
+    nombre,
+    CONCAT(LEFT(email, 1), '***@', SUBSTRING_INDEX(email, '@', -1)) AS email_enmascarado,
+    rol
 FROM usuarios
 WHERE eliminado = 0;
 
