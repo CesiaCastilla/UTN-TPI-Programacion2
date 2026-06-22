@@ -79,6 +79,6 @@ Cada opción abre un submenú con operaciones CRUD (Listar, Crear, Editar, Elimi
 
 ## Documentación y video
 
-- **Video demostrativo:** _pendiente — completar enlace con permisos públicos de visualización._
-- **Informe PDF (Programación 2):** _pendiente — completar enlace o adjuntar el PDF en la raíz del repositorio._
-- **Diagrama UML:** _pendiente — completar enlace o adjuntar la imagen exportada._
+- [Video demostrativo](https://drive.google.com/file/d/1VIsyW-c7BM9V_N5efmfJgWmVb4jFaQ52/view?usp=drive_link)
+- [Informe PDF](/TPI_Programación2_FoodStore.pdf)
+- [Diagrama UML](/Diagrama_UML.drawio.png)
