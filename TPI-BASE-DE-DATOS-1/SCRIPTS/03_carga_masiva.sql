@@ -120,7 +120,7 @@ SET p.total = d.total_calculado;
 
 -- =============================================================================
 -- 6. Cuadro de verificaciones (conteos, FKs huérfanas, rangos de dominio)
--- Ver descripción completa en TPI_PROGRAMACION_DB/Etapa2_Descripcion_Conceptual.md
+-- Descripción conceptual del mecanismo de llenado: ver Anexo IA - Etapa 2 en el PDF final.
 -- =============================================================================
 SELECT 'usuarios' AS tabla, COUNT(*) AS total_registros FROM usuarios
 UNION ALL

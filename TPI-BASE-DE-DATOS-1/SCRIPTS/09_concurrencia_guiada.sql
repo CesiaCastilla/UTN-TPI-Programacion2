@@ -60,9 +60,6 @@ COMMIT;   -- o ROLLBACK, según lo que se quiera dejar registrado en la prueba
 -- (A4 / B4 — en la sesión víctima del error 1213, por las dudas)
 -- ROLLBACK; -- normalmente no hace falta: el deadlock ya revirtió la transacción
 
--- Documentar acá el resultado real obtenido al correr esta parte (qué sesión
--- recibió el 1213, y el texto exacto del error) en Etapa5_Descripcion_Conceptual.md.
-
 -- =============================================================================
 -- PARTE 2 — Comparación de niveles de aislamiento
 -- READ COMMITTED vs REPEATABLE READ, con un ejemplo simple y observable:
@@ -116,8 +113,8 @@ SELECT stock FROM productos WHERE id = 6;
 -- (A3) SESIÓN A — cierra la transacción
 COMMIT;
 
--- Documentar acá los valores reales obtenidos en 2.a y 2.b en
--- Etapa5_Descripcion_Conceptual.md (informe breve de 5-10 líneas).
+-- Documentar acá los valores reales obtenidos en 2.a y 2.b en el informe breve
+-- de 5-10 líneas (ver Anexo IA - Etapa 5 en el PDF final).
 
 -- =============================================================================
 -- PARTE 3 (opcional / integradora) — Retry automático ante deadlock
