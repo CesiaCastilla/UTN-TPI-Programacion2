@@ -17,7 +17,7 @@ USE food_store;
 -- =============================================================================
 -- PASO 0 (cualquier sesión) — Elegir 4 productos de prueba con stock alto
 -- Anotar los 4 ids devueltos: se usan como <<PRODUCTO_A>>, <<PRODUCTO_B>>,
--- <<PRODUCTO_C>> y <<PRODUCTO_D>> en los pasos siguientes. Se piden con stock
+-- 3 y 6 en los pasos siguientes. Se piden con stock
 -- alto para que ninguna prueba falle por quedarse sin stock antes de tiempo.
 -- =============================================================================
 SELECT id, nombre, stock
@@ -35,14 +35,14 @@ LIMIT 4;
 
 -- (A1) SESIÓN A — abre transacción y bloquea PRODUCTO_A
 START TRANSACTION;
-UPDATE productos SET stock = stock - 1 WHERE id = <<PRODUCTO_A>>;
+UPDATE productos SET stock = stock - 1 WHERE id = 1;
 
 -- (B1) SESIÓN B — abre transacción y bloquea PRODUCTO_B
 START TRANSACTION;
-UPDATE productos SET stock = stock - 1 WHERE id = <<PRODUCTO_B>>;
+UPDATE productos SET stock = stock - 1 WHERE id = 2;
 
 -- (A2) SESIÓN A — intenta tomar PRODUCTO_B (ya lo tiene B): queda esperando
-UPDATE productos SET stock = stock - 1 WHERE id = <<PRODUCTO_B>>;
+UPDATE productos SET stock = stock - 1 WHERE id = 2;
 
 -- (B2) SESIÓN B — intenta tomar PRODUCTO_A (ya lo tiene A): ciclo de espera
 -- cerrado. MySQL detecta el deadlock y aborta una de las dos transacciones.
@@ -51,7 +51,7 @@ UPDATE productos SET stock = stock - 1 WHERE id = <<PRODUCTO_B>>;
 --   ERROR 1213 (40001): Deadlock found when trying to get lock; try
 --   restarting transaction
 -- La transacción víctima queda automáticamente revertida por el servidor.
-UPDATE productos SET stock = stock - 1 WHERE id = <<PRODUCTO_A>>;
+UPDATE productos SET stock = stock - 1 WHERE id = 1;
 
 -- (A3 / B3) La sesión que NO recibió el error 1213 sigue con su transacción
 -- abierta y ya tiene ambos locks: debe cerrarla explícitamente.
@@ -75,23 +75,23 @@ COMMIT;   -- o ROLLBACK, según lo que se quiera dejar registrado en la prueba
 -- (A1) SESIÓN A
 SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 START TRANSACTION;
-SELECT stock FROM productos WHERE id = <<PRODUCTO_C>>;
+SELECT stock FROM productos WHERE id = 3;
 -- Anotar el valor devuelto (ej. 120)
 
 -- (B1) SESIÓN B — modifica y confirma el mismo producto
 START TRANSACTION;
-UPDATE productos SET stock = stock - 50 WHERE id = <<PRODUCTO_C>>;
+UPDATE productos SET stock = stock - 50 WHERE id = 3;
 COMMIT;
 
 -- (A2) SESIÓN A — repite la MISMA lectura, dentro de la MISMA transacción
-SELECT stock FROM productos WHERE id = <<PRODUCTO_C>>;
+SELECT stock FROM productos WHERE id = 3;
 -- Resultado esperado: el MISMO valor que en (A1), aunque B ya hizo commit del
 -- cambio. REPEATABLE READ mantiene una foto (snapshot) consistente de los
 -- datos durante toda la transacción.
 
 -- (A3) SESIÓN A — cierra la transacción y vuelve a leer
 COMMIT;
-SELECT stock FROM productos WHERE id = <<PRODUCTO_C>>;
+SELECT stock FROM productos WHERE id = 3;
 -- Ahora sí se ve el valor actualizado por B (la transacción de A ya terminó).
 
 -- --- 2.b) READ COMMITTED ----------------------------------------------------
@@ -99,16 +99,16 @@ SELECT stock FROM productos WHERE id = <<PRODUCTO_C>>;
 -- (A1) SESIÓN A
 SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
 START TRANSACTION;
-SELECT stock FROM productos WHERE id = <<PRODUCTO_D>>;
+SELECT stock FROM productos WHERE id = 6;
 -- Anotar el valor devuelto (ej. 80)
 
 -- (B1) SESIÓN B — modifica y confirma el mismo producto
 START TRANSACTION;
-UPDATE productos SET stock = stock - 50 WHERE id = <<PRODUCTO_D>>;
+UPDATE productos SET stock = stock - 50 WHERE id = 6;
 COMMIT;
 
 -- (A2) SESIÓN A — repite la MISMA lectura, dentro de la MISMA transacción
-SELECT stock FROM productos WHERE id = <<PRODUCTO_D>>;
+SELECT stock FROM productos WHERE id = 6;
 -- Resultado esperado: a diferencia de REPEATABLE READ, acá SÍ se ve el valor
 -- ya actualizado por B, porque READ COMMITTED lee el último dato confirmado
 -- en cada SELECT, sin mantener una foto fija de toda la transacción.
